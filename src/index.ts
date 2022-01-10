@@ -18,11 +18,16 @@ const io = new Server(server, {
     path: '/socket.io'
 });
 
+app.use(express.urlencoded({extended: true}))
+
+app.set('views', './public');
+app.set('view engine', 'ejs');
+
 app.use(express.static('public'));
 
-app.get('/a', (req, res) => {
-    res.send('Well done!');
-})
+app.get('/', (req, res) => {
+    res.render('index', {messages});
+});
 
 io.on('connection', (socket: Socket) => {
     console.log('Un cliente se ha conectado');
