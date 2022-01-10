@@ -1,0 +1,47 @@
+import express from 'express';
+
+
+const PORT = process.env.PORT || 3000;
+const app = express()
+//const server = require('http').Server(app)
+import { createServer } from "http";
+//const io = require('socket.io')(server)
+import { Server, Socket } from "socket.io";
+import { Client } from 'socket.io/dist/client';
+
+
+let messages: String[] = [
+];
+
+const server = createServer(app);
+const io = new Server(server, {
+    path: '/socket.io'
+});
+
+app.use(express.static('public'));
+
+app.get('/a', (req, res) => {
+    res.send('Well done!');
+})
+
+io.on('connection', (socket: Socket) => {
+    console.log('Un cliente se ha conectado');
+    socket.emit('messages', messages); // emitir todos los mensajes a un cliente nuevo 
+
+    socket.on('new-message', function(data: String) {
+        messages.push(data); // agregar mensajes a array 
+        io.sockets.emit('messages', messages); //emitir a todos los clientes
+    });    
+});
+
+
+
+const srv = server.listen(PORT, () => { 
+    
+    const addr = server.address();
+    const binding = typeof addr === 'string'
+    ? `pipe/socket ${addr}`
+    : `port ${addr?.port}`;
+    console.log(`Servidor Http con Websockets escuchando en el puerto ${binding}`);
+})
+srv.on('error', error => console.log(`Error en servidor ${error}`))
