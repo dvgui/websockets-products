@@ -75,7 +75,7 @@ export default class Container{
         if(!oldProduct){
             return null;
         }
-        let newProduct = {...product,id:oldProduct.id};
+        let newProduct = {...product, id};
         this.deleteById(id);
         this.content.push(newProduct);
         write(this.path,JSON.stringify(this.content)).catch(err =>{

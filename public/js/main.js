@@ -6,7 +6,7 @@ socket.on('messages', function(data) {
 
 socket.on('products', function(data) { 
   console.log(data);
-  render(data);
+  renderPrd(data);
 });
 
 function renderMsg(data) { 

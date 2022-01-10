@@ -10,11 +10,11 @@ import { Server, Socket } from "socket.io";
 import ProductsAPI from './ProductsAPI';
 
 
-let messages: String[] = [
-];
+/* let messages: String[] = [
+]; */
 
 const products = new ProductsAPI('./data/products.json');
-//const messages = new ProductsAPI('/messages.json');
+const messages = new ProductsAPI('./data/messages.json');
 
 const server = createServer(app);
 const io = new Server(server, {
@@ -34,15 +34,15 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket: Socket) => {
     console.log('Un cliente se ha conectado');
-    socket.emit('messages', messages); // emitir todos los mensajes a un cliente nuevo 
-
+    socket.emit('messages', messages.getAll()); // emitir todos los mensajes a un cliente nuevo 
+    socket.emit('products', products.getAll());
     socket.on('new-message', function(data: String) {
         messages.push(data); 
-        io.sockets.emit('messages', messages); //emitir a todos los clientes
+        io.sockets.emit('messages', messages.getAll()); //emitir a todos los clientes
     });    
     socket.on('new-product', function(data: String) {
         products.push(data); 
-        io.sockets.emit('messages', messages); //emitir a todos los clientes
+        io.sockets.emit('products', products.getAll()); //emitir a todos los clientes
     });    
 });
 
