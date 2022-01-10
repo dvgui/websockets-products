@@ -7,11 +7,14 @@ const app = express()
 import { createServer } from "http";
 //const io = require('socket.io')(server)
 import { Server, Socket } from "socket.io";
-import { Client } from 'socket.io/dist/client';
+import ProductsAPI from './ProductsAPI';
 
 
 let messages: String[] = [
 ];
+
+const products = new ProductsAPI('./data/products.json');
+//const messages = new ProductsAPI('/messages.json');
 
 const server = createServer(app);
 const io = new Server(server, {
@@ -34,7 +37,11 @@ io.on('connection', (socket: Socket) => {
     socket.emit('messages', messages); // emitir todos los mensajes a un cliente nuevo 
 
     socket.on('new-message', function(data: String) {
-        messages.push(data); // agregar mensajes a array 
+        messages.push(data); 
+        io.sockets.emit('messages', messages); //emitir a todos los clientes
+    });    
+    socket.on('new-product', function(data: String) {
+        products.push(data); 
         io.sockets.emit('messages', messages); //emitir a todos los clientes
     });    
 });
