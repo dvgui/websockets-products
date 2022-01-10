@@ -21,9 +21,9 @@ function renderMsg(data) {
 function renderPrd(data) { 
   let html = data.map( (elem, index) => { 
     return(`<tr>
-          <td>${elem.title}</td> 
+          <td  scope="row">${elem.title}</td> 
           <td>${elem.price}</td> 
-          <td><img src="${elem.snapshot}"></td>
+          <td><img src="${elem.snapshot}" class="prod"></td>
           </tr>`) 
   }).join(" "); 
   document.getElementById('products').innerHTML = html; 
