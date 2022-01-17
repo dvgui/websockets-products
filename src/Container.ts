@@ -31,11 +31,11 @@ export default class Container {
     try {
       read(this.path).then((res) => {
         this.content = JSON.parse(res);
-      });
-      this.content.forEach((element) => {
-        if (element.id >= this.id) {
-          this.id = element.id + 1;
-        }
+        this.content.forEach((element) => {
+          if (element.id >= this.id) {
+            this.id = element.id + 1;
+          }
+        });
       });
     } catch (err) {
       (async () => await write(this.path, "[]"))();
@@ -55,7 +55,7 @@ export default class Container {
   getAll() {
     return this.content;
   }
-  deleteById(id) {
+  deleteById(id: number) {
     this.content = this.content.filter((e) => e.id !== Number(id));
     write(this.path, JSON.stringify(this.content)).catch((err) => {
       console.log("Error al escribir", err);
@@ -69,7 +69,7 @@ export default class Container {
       console.log(err);
     }
   }
-  update(id, product) {
+  update(id: number, product) {
     let oldProduct = this.getById(id);
     if (!oldProduct) {
       return null;
@@ -82,7 +82,7 @@ export default class Container {
     });
     return newProduct;
   }
-  getById(id) {
+  getById(id: number) {
     let value = this.content.find((e) => e.id === Number(id));
     if (!value) {
       return null;

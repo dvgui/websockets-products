@@ -6,6 +6,7 @@ export default class ProductsAPI {
   constructor(path) {
     this.products = new Container(path);
   }
+
   getAll() {
     return this.products.getAll();
   }

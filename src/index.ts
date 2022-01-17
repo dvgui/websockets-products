@@ -2,11 +2,25 @@ import express from "express";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
 import ProductsAPI from "./ProductsAPI";
+import Cart from "./Cart";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
+const { Router } = express;
+
+const routerProducts = Router();
+const routerCart = Router();
+
+app.use("/api/products", routerProducts);
+app.use("/api/cart", routerCart);
+
+routerProducts.use(express.json());
+routerProducts.use(express.urlencoded({ extended: true }));
+routerCart.use(express.urlencoded({ extended: true }));
+routerCart.use(express.json());
 
 const products = new ProductsAPI("./data/products.json");
+const cart = new Cart("./data/cart.json");
 const messages = new ProductsAPI("./data/messages.json");
 
 const server = createServer(app);
@@ -25,6 +39,40 @@ app.get("/", (req, res) => {
   res.render("index", { messages });
 });
 
+/* ------------------------------ PRODUCT API ------------------------------ */
+
+routerProducts.get("/:id?", (req, res) => {
+  req.params.id
+    ? res.json(products.get(req.params.id))
+    : res.json(products.getAll());
+});
+
+routerProducts.post("/", (req, res) => {
+  products.push(req.body);
+  res.json(req.body);
+});
+
+routerProducts.put("/:id", (req, res) => {
+  let id = parseInt(req.params.id);
+  products.update(id, req.body);
+  res.json(req.body);
+});
+
+routerProducts.delete("/:id", (req, res) => {
+  let id = parseInt(req.params.id);
+  products.delete(id);
+  res.json(products.get(id));
+});
+
+/* ------------------------------ CART API ------------------------------ */
+
+routerCart.post("/", (req, res) => {
+  let cartId = cart.push({});
+  res.json({ cartId: cartId });
+});
+
+/* ------------------------------ CHAT & SOCKETS ------------------------------ */
+
 io.on("connection", (socket: Socket) => {
   console.log("Un cliente se ha conectado");
   socket.emit("messages", messages.getAll()); // emitir todos los mensajes a un cliente nuevo
@@ -38,6 +86,8 @@ io.on("connection", (socket: Socket) => {
     io.sockets.emit("products", products.getAll()); //emitir a todos los clientes
   });
 });
+
+/* ------------------------------ SERVER RUNNER ------------------------------ */
 
 const srv = server.listen(PORT, () => {
   const addr = server.address();
