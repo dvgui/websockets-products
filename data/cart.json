@@ -1,1 +1,1 @@
-[{"id":0},{"id":1},{"id":2},{"id":3}]
+[{"id":0},{"id":1},{"id":2,"products":[{"title":"car","price":"60000","snapshot":"https://www.autonocion.com/wp-content/uploads/2021/08/prueba-audi-rs5-2021-ext24-1130x698.jpg","id":2},{"title":"cheese","price":"3","snapshot":"https://www.ken-foods.com/wp-content/uploads/2021/02/receta-aire-de-cheese.jpg","id":1}]}]

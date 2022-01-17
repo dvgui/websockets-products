@@ -1,10 +1,30 @@
 import Container from "./Container";
 
-export default class ProductsAPI {
+export default class Products {
   products: any;
 
   constructor(path) {
     this.products = new Container(path);
+  }
+
+  create(
+    name: string,
+    description: string,
+    code: string,
+    picUrl: string,
+    price: number,
+    stock: number
+  ) {
+    let id = this.products.save({
+      name: name,
+      description: description,
+      code: code,
+      picUrl: picUrl,
+      price: price,
+      timestamp: Date.now,
+      stock: stock,
+    });
+    return this.products.getById(id);
   }
 
   getAll() {
