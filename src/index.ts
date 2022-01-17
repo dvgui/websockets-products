@@ -1,9 +1,8 @@
 import express from "express";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
-import ProductsAPI from "./Products";
+import Products from "./Products";
 import Cart from "./Cart";
-import { isArrayLiteralExpression } from "typescript";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -20,9 +19,9 @@ routerProducts.use(express.urlencoded({ extended: true }));
 routerCart.use(express.urlencoded({ extended: true }));
 routerCart.use(express.json());
 
-const products = new ProductsAPI("./data/products.json");
+const products = new Products("./data/products.json");
 const carts = new Cart("./data/cart.json");
-const messages = new ProductsAPI("./data/messages.json");
+const messages = new Products("./data/messages.json");
 
 const server = createServer(app);
 const io = new Server(server, {
