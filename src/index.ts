@@ -138,6 +138,31 @@ routerCart.delete("/:id/products/:id_prod", (req, res) => {
   res.json(carts.get(id));
 });
 
+app.get("*", function (req, res) {
+  res.send({
+    error: -2,
+    descripcion: `route ${req.path} method 'get' not implemented`,
+  });
+});
+app.post("*", function (req, res) {
+  res.send({
+    error: -2,
+    descripcion: `route ${req.path} method 'post' not implemented`,
+  });
+});
+app.delete("*", function (req, res) {
+  res.send({
+    error: -2,
+    descripcion: `route ${req.path} method 'delete' not implemented`,
+  });
+});
+app.put("*", function (req, res) {
+  res.send({
+    error: -2,
+    descripcion: `route ${req.path} method 'put' not implemented`,
+  });
+});
+
 /* ------------------------------ CHAT & SOCKETS ------------------------------ */
 
 io.on("connection", (socket: Socket) => {
