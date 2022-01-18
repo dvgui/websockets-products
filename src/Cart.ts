@@ -14,13 +14,17 @@ export default class Cart {
     let id = this.carts.save(producto);
     return this.carts.getById(id);
   }
-  update(id: number, producto) {
-    return this.carts.update(id, producto);
+  update(id: number, products) {
+    return this.carts.update(id, products);
   }
   delete(id: number) {
-    let product = this.carts.getById(id);
+    let cart = this.carts.getById(id);
     this.carts.deleteById(id);
-    return product;
+    return cart;
+  }
+  deleteProduct(id: number, product: number) {
+    let cart = this.carts.getById(id);
+    cart.find();
   }
   get(id: number) {
     return this.carts.getById(id);
