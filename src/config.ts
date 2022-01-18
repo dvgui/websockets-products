@@ -18,12 +18,13 @@ const config: Knex.Config = {
     port: parseInt(process.env.DB_PORT),
   },
 };
-/*
-const config: Knex.Config = {
+
+/* const config: Knex.Config = {
   client: "sqlite3",
   connection: {
     filename: "../db/mydb.sqlite",
   },
-};
-*/
+  useNullAsDefault: true,
+}; */
+
 export default config;
