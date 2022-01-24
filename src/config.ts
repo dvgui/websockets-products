@@ -8,7 +8,7 @@ if (result.error) {
   throw result.error;
 }
 
-const config: Knex.Config = {
+const mysqlConfig: Knex.Config = {
   client: "mysql",
   connection: {
     database: process.env.DB,
@@ -19,12 +19,12 @@ const config: Knex.Config = {
   },
 };
 
-/* const config: Knex.Config = {
+const sqliteConfig: Knex.Config = {
   client: "sqlite3",
   connection: {
     filename: "../db/mydb.sqlite",
   },
   useNullAsDefault: true,
-}; */
+};
 
-export default config;
+export { mysqlConfig, sqliteConfig };

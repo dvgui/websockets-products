@@ -1,6 +1,7 @@
-import fs from "fs";
-
-const read = async (path: fs.PathLike | fs.promises.FileHandle) => {
+//import fs from "fs";
+import Knex from "knex";
+import { sqliteConfig } from "./config";
+/* const read = async (path: fs.PathLike | fs.promises.FileHandle) => {
   try {
     const content = await fs.promises.readFile(path, "utf-8");
     return content;
@@ -18,75 +19,33 @@ const write = async (
   } catch (err) {
     console.log("Error de escritura " + err);
   }
-};
+}; */
 
 export default class Container {
-  path: fs.PathLike | fs.promises.FileHandle;
-  id: number;
-  content: any[];
-  constructor(path: fs.PathLike | fs.promises.FileHandle) {
-    this.path = path;
-    this.id = 0;
-    this.content = [];
-    try {
-      read(this.path).then((res) => {
-        this.content = JSON.parse(res);
-        this.content.forEach((element) => {
-          if (element.id >= this.id) {
-            this.id = element.id + 1;
-          }
-        });
-      });
-    } catch (err) {
-      (async () => await write(this.path, "[]"))();
-      throw new Error("Error " + err);
-    }
+  knex: any;
+  tableName: string;
+
+  constructor(tableName) {
+    this.knex = Knex(sqliteConfig);
+    this.tableName = tableName;
   }
 
   save(object) {
-    object.id = this.id;
-    this.content.push(object);
-    this.id++;
-    write(this.path, JSON.stringify(this.content)).catch((err) => {
-      console.log("Error al escribir", err);
-    });
-    return this.id - 1;
+    this.knex(this.tableName).insert(object).then();
   }
   getAll() {
-    return this.content;
+    return this.knex.select().table(this.tableName).then();
   }
-  deleteById(id: number) {
-    this.content = this.content.filter((e) => e.id !== Number(id));
-    write(this.path, JSON.stringify(this.content)).catch((err) => {
-      console.log("Error al escribir", err);
-    });
+  deleteById(id) {
+    this.knex(this.tableName).where({ id: id }).del();
   }
   deleteAll() {
-    this.content = [];
-    try {
-      async () => await write(this.path, "[]");
-    } catch (err) {
-      console.log(err);
-    }
+    this.knex(this.tableName).del().where("id", "!=", "null");
   }
-  update(id: number, product) {
-    let oldProduct = this.getById(id);
-    if (!oldProduct) {
-      return null;
-    }
-    let newProduct = { ...product, id };
-    this.deleteById(id);
-    this.content.push(newProduct);
-    write(this.path, JSON.stringify(this.content)).catch((err) => {
-      console.log("Error al escribir", err);
-    });
-    return newProduct;
+  update(id, product) {
+    this.knex(this.tableName).where({ id: id }).update(product);
   }
-  getById(id: number) {
-    let value = this.content.find((e) => e.id === Number(id));
-    if (!value) {
-      return null;
-    }
-    return value;
+  getById(id) {
+    return this.knex(this.tableName).where({ id: id });
   }
 }

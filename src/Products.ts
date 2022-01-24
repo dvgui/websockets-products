@@ -2,37 +2,15 @@ import Container from "./Container";
 
 export default class Products {
   products: any;
-
-  constructor(path) {
-    this.products = new Container(path);
+  tableName: string;
+  constructor(tableName) {
+    this.products = new Container(tableName);
   }
-
-  create(
-    name: string,
-    description: string,
-    code: string,
-    picUrl: string,
-    price: number,
-    stock: number
-  ) {
-    let id = this.products.save({
-      name: name,
-      description: description,
-      code: code,
-      picUrl: picUrl,
-      price: price,
-      timestamp: Date.now,
-      stock: stock,
-    });
-    return this.products.getById(id);
-  }
-
   getAll() {
     return this.products.getAll();
   }
   push(producto) {
-    let id = this.products.save(producto);
-    return this.products.getById(id);
+    this.products.save(producto);
   }
   update(id, producto) {
     return this.products.update(id, producto);

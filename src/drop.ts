@@ -1,9 +1,9 @@
-import config from "./config";
+import { sqliteConfig, mysqlConfig } from "./config";
 import Knex from "knex";
 
-const knex = Knex(config);
+const knex = Knex(sqliteConfig);
 
-console.log(config.connection);
+console.log(sqliteConfig.connection);
 knex.schema
   .dropTable("articulos")
   .then(() => {

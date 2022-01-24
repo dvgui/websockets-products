@@ -3,6 +3,9 @@ import { createServer } from "http";
 import { Server, Socket } from "socket.io";
 import Products from "./Products";
 import Cart from "./Cart";
+import createTables from "./create";
+
+createTables();
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -19,9 +22,9 @@ routerProducts.use(express.urlencoded({ extended: true }));
 routerCart.use(express.urlencoded({ extended: true }));
 routerCart.use(express.json());
 
-const products = new Products("./data/products.json");
+const products = new Products("products");
 const carts = new Cart("./data/cart.json");
-const messages = new Products("./data/messages.json");
+const messages = new Products("messages");
 
 const server = createServer(app);
 const io = new Server(server, {
