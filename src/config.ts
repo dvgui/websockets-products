@@ -8,6 +8,8 @@ if (result.error) {
   throw result.error;
 }
 
+const mongoConfig: string = process.env.MONGO_STR;
+
 const mysqlConfig: Knex.Config = {
   client: "mysql",
   connection: {
@@ -27,4 +29,4 @@ const sqliteConfig: Knex.Config = {
   useNullAsDefault: true,
 };
 
-export { mysqlConfig, sqliteConfig };
+export { mysqlConfig, sqliteConfig, mongoConfig };
