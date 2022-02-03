@@ -9,7 +9,6 @@ createTables();
 
 const PORT = process.env.PORT || 3000;
 const app = express();
-const { Router } = express;
 
 app.use("/api/products", routerProducts);
 app.use("/api/cart", routerCart);
@@ -54,8 +53,6 @@ const srv = server.listen(PORT, () => {
   const addr = server.address();
   const binding =
     typeof addr === "string" ? `pipe/socket ${addr}` : `port ${addr?.port}`;
-  console.log(
-    `Servidor Http con Websockets escuchando en el puerto ${binding}`
-  );
+  console.log(`Http server listening in ${binding}`);
 });
 srv.on("error", (error) => console.log(`Error en servidor ${error}`));
